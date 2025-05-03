@@ -1,23 +1,27 @@
-import logo from './logo.svg';
+// src/App.js
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
+
+// Import page components
+import StudentLoginPage from './pages/StudentLoginPage';
+import AdminLoginPage from './pages/AdminLoginPage';
+import StudentDashboard from './pages/StudentDashboard';
+import AdminDashboard from './pages/AdminDashboard'; // <-- Import the new component
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route path="/" element={<StudentLoginPage />} />
+        <Route path="/admin-login" element={<AdminLoginPage />} />
+        <Route path="/dashboard" element={<StudentDashboard />} />
+
+        {/* --- NEW: Route for the Admin Dashboard --- */}
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+
+        <Route path="*" element={<h2>Page Not Found</h2>} />
+      </Routes>
     </div>
   );
 }
