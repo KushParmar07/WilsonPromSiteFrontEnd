@@ -197,14 +197,14 @@ function AdminDashboard() {
       <AppBar position="static" elevation={4} sx={{ backgroundColor: '#003B5C' }}>
          <Toolbar> 
              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> Admin Dashboard </Typography> 
-             <Typography sx={{ mr: 2 }}>({adminInfo.role})</Typography> 
+             <Typography sx={{ mr: 2 }}>{adminInfo.username === 'mbuckland' ? "Mr. Buckland" : "Staff"}</Typography> 
              <Button color="inherit" onClick={handleLogout}>Logout</Button> 
          </Toolbar>
       </AppBar>
       {/* Main Content */}
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
         <Typography variant="h6" gutterBottom> 
-            Welcome, {adminInfo.username === 'mbuckland' ? 'Mr. Buckland' : adminInfo.username}! 
+            Welcome, {adminInfo.username === 'mbuckland' ? 'Mr. Buckland' : "Staff"}! 
         </Typography>
         {feedbackMessage.text && ( <Alert severity={feedbackMessage.type || 'info'} sx={{ mb: 2 }} onClose={() => setFeedbackMessage({ text: '' })}> {feedbackMessage.text} </Alert> )}
         {/* Upload Section */}
