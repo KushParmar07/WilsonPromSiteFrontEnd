@@ -18,7 +18,7 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   const [assignments, setAssignments] = useState([]);
-  const [assignmentsLoading, setAssignmentsLoading] = useState(false); // Only true during fetch
+  const [assignmentsLoading, setAssignmentsLoading] = useState(false); 
   const [assignmentsError, setAssignmentsError] = useState('');
 
   // Upload State
@@ -34,11 +34,11 @@ function AdminDashboard() {
   const [targetTableIdInput, setTargetTableIdInput] = useState('');
   const [moveLoading, setMoveLoading] = useState(false);
   const [moveError, setMoveError] = useState('');
-  const [feedbackMessage, setFeedbackMessage] = useState({ type: '', text: '' });
+  const [feedbackMessage, setFeedbackMessage] = useState({ type: '', text: '' }); 
 
   // --- Handlers and Effects ---
 
-  // Fetch Assignments Function (now called after auth check)
+  // Fetch Assignments Function
   const fetchAssignments = useCallback(async (showFeedback = false) => {
     console.log("Fetching assignments...");
     setAssignmentsLoading(true);
@@ -65,7 +65,7 @@ function AdminDashboard() {
     const verifySessionAndLoadData = async () => {
       console.log("Verifying session via /api/users/me...");
       setAuthLoading(true);
-      setAssignmentsError(''); // Clear errors on load
+      setAssignmentsError(''); 
       setFeedbackMessage({ text: '' });
       try {
         // Attempt to get current user info - relies on session cookie
@@ -165,17 +165,20 @@ function AdminDashboard() {
   
   // --- Logout Handler ---
   const handleLogout = async () => {
+    setFeedbackMessage({ text: '' }); // Clear feedback on logout
     try {
-        await apiClient.post('/api/logout'); // Call backend logout
-        console.log("Admin logout successful on backend.");
+        // Use apiClient, relative path to call backend logout
+        await apiClient.post('/api/logout');
+        console.log("Logout successful on backend.");
     } catch (error) {
-        console.error("Admin logout failed on backend:", error);
+        console.error("Logout failed on backend:", error);
+        // Proceed with frontend logout even if backend fails
     } finally {
-        // Always clear local state and redirect
-        setAdminInfo(null); // Clear admin state
-        navigate('/admin-login'); // Redirect to admin login
+        // Always clear local state and navigate
+        setAdminInfo(null); 
+        navigate('/admin-login'); 
     }
-};
+  };
 
   // --- Render Logic ---
   if (authLoading) {

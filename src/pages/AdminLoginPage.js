@@ -11,7 +11,7 @@ import { Container, Box, Typography, TextField, Button, Alert, CircularProgress,
 // --- End MUI Imports ---
 
 function AdminLoginPage() {
-  // State variables remain the same
+  // State variables
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -23,12 +23,11 @@ function AdminLoginPage() {
     setError('');
     setLoading(true);
     const loginData = { username: username, password: password };
-
     try {
-      // Use apiClient and relative path
+      // Use apiClient, relative path
       const response = await apiClient.post('/api/login/admin', loginData);
-      console.log('Admin login API call successful:', response.data);
-
+      console.log('Admin login successful:', response.data);
+      
       // --- REMOVE localStorage setItem ---
       // localStorage.setItem('adminInfo', JSON.stringify(response.data)); 
       
@@ -37,14 +36,13 @@ function AdminLoginPage() {
 
     } catch (err) {
       setLoading(false); 
-      console.error('Admin login error:', err);
       const message = err.response?.data?.message || 'Login failed. Check connection or credentials.';
       setError(message);
+      console.error('Admin login error:', err);
     }
-    // No need to setLoading(false) on success if navigating away
   };
 
-  // --- Render Logic (No changes needed in JSX structure) ---
+  // Render using MUI components
   return (
     <Container component="main" maxWidth="xs">
       <Box

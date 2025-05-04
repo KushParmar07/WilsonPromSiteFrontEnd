@@ -12,7 +12,7 @@ import { Container, Box, Typography, TextField, Button, Alert, CircularProgress,
 
 
 function StudentLoginPage() {
-  // State variables remain the same
+  // State variables
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
