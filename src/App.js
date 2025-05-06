@@ -7,7 +7,7 @@ import './App.css';
 import StudentLoginPage from './pages/StudentLoginPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import StudentDashboard from './pages/StudentDashboard';
-import AdminDashboard from './pages/AdminDashboard'; // <-- Import the new component
+import AdminDashboard from './pages/AdminDashboard'; 
 
 function App() {
   return (

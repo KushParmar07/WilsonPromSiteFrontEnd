@@ -355,7 +355,6 @@ function AdminDashboard() {
                     </TableSortLabel>
                   </TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell>OEN</TableCell>
                   <TableCell align="center" sortDirection={sortConfig.key === 'assigned_table_number' ? sortConfig.direction : false}>
                     <TableSortLabel
                       active={sortConfig.key === 'assigned_table_number'}
@@ -378,7 +377,6 @@ function AdminDashboard() {
                        <TableCell>{student.last_name}</TableCell>
                        <TableCell>{student.first_name}</TableCell>
                        <TableCell>{student.email}</TableCell>
-                       <TableCell>{student.oen}</TableCell>
                        <TableCell align="center">{student.assigned_table_number ?? 'N/A'}</TableCell>
                        <TableCell align="center">
                          <IconButton aria-label="move student" size="small" onClick={() => handleMoveStudentClick(student)} color="primary">
