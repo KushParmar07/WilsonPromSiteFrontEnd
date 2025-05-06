@@ -41,13 +41,10 @@ function TableCard({ table, isSelected, isLoading, onSelect }) {
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative', 
-    // Use elevation prop now for base shadow, remove boxShadow here
-    transition: 'all 0.25s ease-in-out', // Refined transition
+    transition: 'all 0.25s ease-in-out',
     '&:hover': { 
-       // elevation prop doesn't directly work in hover via sx, manage shadow or transform
-       transform: !isDisabled ? 'scale(1.1)' : (isSelected ? 'scale(1.05)' : 'scale(1)'), // Increased hover scale
-       boxShadow: !isDisabled ? '0px 4px 20px 5px rgba(0,0,0,0.2)' : undefined // Example enhanced hover shadow
-       // Or use elevation prop change by managing state (more complex)
+       transform: !isDisabled ? 'scale(1.1)' : (isSelected ? 'scale(1.05)' : 'scale(1)'), 
+       boxShadow: !isDisabled ? '0px 4px 20px 5px rgba(0,0,0,0.2)' : undefined 
     },
   }}
 >

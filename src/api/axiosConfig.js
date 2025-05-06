@@ -2,19 +2,17 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5000', // Your backend URL
-  withCredentials: true // Send cookies with requests
+  baseURL: 'http://localhost:5000', // Replace with your backend URL
+  withCredentials: true 
 });
 
-// Optional: Global error handler for 401 Unauthorized
 apiClient.interceptors.response.use(
-  response => response, // Pass through successful responses
+  response => response, 
   error => {
-    if (error.response && error.response.status === 401) {
-      // Log the error. Components should handle the redirect.
+    if (error.response && error.response.status === 401) { 
       console.error("Axios interceptor: Received 401 Unauthorized");
     }
-    return Promise.reject(error); // Pass the error along
+    return Promise.reject(error);
   }
 );
 

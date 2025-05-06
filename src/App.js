@@ -16,8 +16,6 @@ function App() {
         <Route path="/" element={<StudentLoginPage />} />
         <Route path="/admin-login" element={<AdminLoginPage />} />
         <Route path="/dashboard" element={<StudentDashboard />} />
-
-        {/* --- NEW: Route for the Admin Dashboard --- */}
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
 
         <Route path="*" element={<h2>Page Not Found</h2>} />
