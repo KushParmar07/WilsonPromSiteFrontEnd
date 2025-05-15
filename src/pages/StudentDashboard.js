@@ -24,6 +24,7 @@ import {
   Card,
   CardContent,
   CardActions,
+  CardHeader,
 } from '@mui/material';
 
 import TableCard from '../components/TableCard'; // Assuming this is your existing TableCard
@@ -278,157 +279,219 @@ if (!studentInfo) {
 }
 
 return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <AppBar position="static" elevation={4} sx={{ backgroundColor: '#003B5C' }}>
-            <Toolbar>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> Prom Seating Selection </Typography>
-                <Typography sx={{ mr: 2 }}>{studentInfo.first_name}</Typography>
-                <Button color="inherit" onClick={handleLogout}>Logout</Button>
-            </Toolbar>
-        </AppBar>
+  <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', bgcolor: 'grey.100' }}>
+    <AppBar position="static" sx={{ backgroundColor: '#003B5C', flexShrink: 0 }}>
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> Prom Seating Selection </Typography>
+        <Typography sx={{ mr: 2 }}>{studentInfo.first_name}</Typography>
+        <Button color="inherit" onClick={handleLogout}>Logout</Button>
+      </Toolbar>
+    </AppBar>
 
-        <Container
-            maxWidth={false}
-            sx={{
-                mt: 2,
-                mb: 2,
-                flexGrow: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                overflowX: 'hidden',
-            }}
+    <Container
+      maxWidth={false} // Allow full width usage
+      sx={{
+        py: 1.5, // Adjusted padding
+        px: { xs: 1, sm: 1.5 },
+        flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column', // Container stacks its direct children vertically
+        overflow: 'hidden', // Prevent this container from scrolling
+        minHeight: 0,
+      }}
+    >
+      {/* This Grid container holds the three main panels and MUST NOT WRAP for horizontal layout */}
+      <Grid
+        container
+        spacing={1.5} // Adjusted spacing
+        sx={{
+          flexGrow: 1,
+          flexDirection: { xs: 'column', sm: 'row' }, // Stack vertically on xs, row on sm+
+          flexWrap: { xs: 'wrap', sm: 'nowrap' },   // Allow wrapping for xs, prevent for sm+
+          minHeight: 0,
+          height: '100%',
+          overflow: { xs: 'auto', sm: 'hidden' } // Allow main container to scroll on xs if content overflows
+        }}
+      >
+        {/* Left Panel: My Current Table */}
+        <Grid item
+          // Responsive column widths (out of 12)
+          xs={12}    // Takes full width on extra-small screens
+      sm={3}
+      md={2.5}
+      lg={2}
+      sx={{
+        display: 'flex', // Always display as flex
+        flexDirection: 'column',
+        minHeight: { xs: 'auto', sm: 0 }, // Adjust minHeight for xs if needed, or set to auto
+        height: { xs: 'auto', sm: '100%'}, // Allow height to be auto on xs
+        flexShrink: { xs: 1, sm: 0 },    // Allow shrinking on xs if needed, prevent on sm
+        flexBasis: { xs: '100%', sm: '220px', md: '260px', lg: '280px' },
+        maxWidth: { xs: '100%', sm: '300px', md: '350px', lg: '400px' },
+        order: { xs: 1, sm: 0 } // Optional: control order on xs, e.g., show this panel first
+      }}
         >
-            <Grid
-                container
-                spacing={2}
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    flexWrap: 'nowrap',
-                    width: '100%',
-                    overflowX: 'auto',
-                    flexGrow: 1,
-                    minHeight: 0,
-                }}
-            >
-                <Grid item xs={12} sm={3} md={3} sx={{ display: 'flex', flexDirection: 'column', minWidth: 0, flexBasis: '15%', flexShrink: 1 }}>
-                    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-                        <CardContent sx={{ flexGrow: 1 }}>
-                            <Typography variant="h6" gutterBottom>My Current Table</Typography>
-                            {myTableLoading ? <CircularProgress size={24} /> :
-                                myCurrentTableDetails && myCurrentTableDetails.table_id ? (
-                                    <>
-                                        <Typography variant="subtitle1" color="primary">
-                                            Table {myCurrentTableDetails.table_number}
-                                        </Typography>
-                                        <StudentList students={myCurrentTableDetails.students || []} title="My Table Occupants:" />
-                                    </>
-                                ) : (
-                                    <Typography variant="body2" color="text.secondary">You are not currently assigned to a table.</Typography>
-                                )
-                            }
-                        </CardContent>
-                    </Card>
-                </Grid>
+          <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', boxShadow: 2, borderRadius: "12px", overflow:'hidden' }}>
+            <CardHeader
+              title="My Current Table"
+              titleTypographyProps={{ variant: 'h6', sx: { fontSize: '1rem', color: 'white', fontWeight:'bold' } }}
+              sx={{ backgroundColor: 'primary.dark', py: 1, px: 2, flexShrink: 0 }} // Darker primary for contrast
+            />
+            <CardContent sx={{ flexGrow: 1, overflowY: 'auto', p: 1.5 }}>
+              {myTableLoading ? (
+                <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80px'}}><CircularProgress size={28} /></Box>
+              ) : myCurrentTableDetails && myCurrentTableDetails.table_id ? (
+                  <>
+                    <Typography variant="h6" color="primary.main" sx={{ fontWeight: 'bold', mb: 0.5, fontSize: '1.1rem' }}>
+                      Table {myCurrentTableDetails.table_number}
+                    </Typography>
+                    <StudentList students={myCurrentTableDetails.students || []} title="My Table Members:" />
+                  </>
+                ) : (
+                  <Typography variant="body2" color="text.secondary" sx={{mt:1, fontStyle: 'italic'}}>You are not currently assigned to a table.</Typography>
+                )
+              }
+            </CardContent>
+          </Card>
+        </Grid>
 
-                <Grid item xs={12} sm={6} md={6} sx={{ display: 'flex', flexDirection: 'column', minWidth: 0, flexBasis: '70%', flexShrink: 1 }}>
-                    <Paper sx={{ p: 2, flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                        <Typography variant="h6" gutterBottom>
-                            Welcome, {studentInfo.first_name} {studentInfo.last_name}!
-                        </Typography>
-                        <Divider sx={{ my: 1 }} />
-                        <Typography component="h2" variant="h5" gutterBottom> Select Your Table </Typography>
-                        {tablesLoading ? (
-                            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}><CircularProgress /></Box>
-                        ) : tablesError ? (
-                            <Alert severity="error">{tablesError}</Alert>
-                        ) : allTables.length === 0 ? (
-                            <Typography>No tables available.</Typography>
-                        ) : (
-                            <motion.div
-                                variants={containerVariants}
-                                initial="hidden"
-                                animate="visible"
-                                style={{
-                                    flexGrow: 1,
-                                    overflow: 'auto',
-                                    minWidth: 0
-                                }}
-                            >
-                                <Grid container spacing={1} justifyContent="center">
-                                    {allTables.map((table) => (
-                                        <motion.div variants={itemVariants} key={table.id}>
-                                            <Grid item xs={6} sm={4} md={4} lg={3}>
-                                                <TableCard
-                                                    table={table}
-                                                    isSelected={table.id === studentInfo.assigned_table_id}
-                                                    isViewed={table.id === viewingTableDetails?.table_id}
-                                                    onSelect={() => handleViewTable(table)}
-                                                    disabled={table.is_full && table.id !== studentInfo.assigned_table_id}
-                                                />
-                                            </Grid>
-                                        </motion.div>
-                                    ))}
-                                </Grid>
-                            </motion.div>
-                        )}
-                    </Paper>
-                </Grid>
+        {/* Center Panel: Table Grid */}
+        <Grid item
+          xs={12}
+          sm={6}
+          md={7}
+          lg={8}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: { xs: 'auto', sm: 0 }, // Allow flexible height on xs
+            flexGrow: 1,
+            minWidth: 0,
+            overflow: 'hidden', // This is for internal scrolling, which is good
+            order: { xs: 2, sm: 0 } // Optional: if left panel is order 1, this is 2
+          }}
+        >
+          <Paper sx={{ p: {xs: 1, sm: 1.5}, flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: 1, borderRadius: "12px" }}>
+            <Box sx={{ flexShrink: 0, textAlign: 'center', mb: 1 }}>
+              <Typography variant="h5" gutterBottom sx={{fontSize: {xs: '1.1rem', sm: '1.3rem'}}}>
+                Welcome, {studentInfo.first_name} {studentInfo.last_name}!
+              </Typography>
+              <Divider sx={{ mb: 1 }} />
+              <Typography component="h2" variant="h4" color="primary.dark" gutterBottom sx={{ fontWeight: 'medium', fontSize: {xs: '1.3rem', sm: '1.6rem'} }}>
+                 Select Your Table
+              </Typography>
+            </Box>
+            {tablesLoading ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', p: 4, flexGrow: 1, alignItems: 'center' }}><CircularProgress /></Box>
+            ) : tablesError ? (
+              <Alert severity="error">{tablesError}</Alert>
+            ) : allTables.length === 0 ? (
+              <Typography sx={{ textAlign: 'center', py: 2 }}>No tables available.</Typography>
+            ) : (
+              // This Box is for scrolling the grid of TableCards if it overflows
+              <Box sx={{ flexGrow: 1, overflow: 'auto', pt: 1, px: 0.5, // Allow both X and Y scroll for card grid
+              }}>
+                <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                  {/* The inner Grid container for TableCards will wrap naturally */}
+                  <Grid container spacing={{xs: 0.5, sm: 1}} justifyContent="flex-start" alignItems="flex-start"> {/* Changed to flex-start */}
+                    {allTables.map((table) => (
+                      <motion.div variants={itemVariants} key={table.id}>
+                        <Grid item sx={{m:0.5 /* Add small margin around each card */}}>
+                          <TableCard
+                            table={table}
+                            isSelected={table.id === studentInfo.assigned_table_id}
+                            isViewed={table.id === viewingTableDetails?.table_id}
+                            onSelect={() => handleViewTable(table)}
+                            disabled={table.is_full && table.id !== studentInfo.assigned_table_id}
+                            isLoading={confirmSeatLoading && viewingTableDetails?.table_id === table.id}
+                          />
+                        </Grid>
+                      </motion.div>
+                    ))}
+                  </Grid>
+                </motion.div>
+              </Box>
+            )}
+          </Paper>
+        </Grid>
 
-                <Grid item xs={12} sm={3} md={3} sx={{ display: 'flex', flexDirection: 'column', minWidth: 0, flexBasis: '15%', flexShrink: 1}}>
-                    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-                        <CardContent sx={{ flexGrow: 1 }}>
-                            <Typography variant="h6" gutterBottom>Table Overview</Typography>
-                            {viewingTableLoading ? <CircularProgress size={24} /> :
-                                viewingTableError ? <Alert severity="error" sx={{ mt: 1 }}>{viewingTableError}</Alert> :
-                                    viewingTableDetails ? (
-                                        <>
-                                            <Typography variant="subtitle1" color="secondary">
-                                                Viewing Table {viewingTableDetails.table_number}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                Capacity: {viewingTableDetails.current_occupancy ?? 0} / {viewingTableDetails.capacity ?? 0}
-                                                {viewingTableDetails.is_full && " (Full)"}
-                                            </Typography>
-                                            <StudentList students={viewingTableDetails.students || []} title="Current Occupants:" />
-                                            {confirmSeatError && <Alert severity="error" sx={{ mt: 2 }}>{confirmSeatError}</Alert>}
-                                        </>
-                                    ) : (
-                                        <Typography variant="body2" color="text.secondary">Click a table to see its details.</Typography>
-                                    )
-                            }
-                        </CardContent>
-                        {viewingTableDetails && viewingTableDetails.table_id !== studentInfo.assigned_table_id && !viewingTableDetails.is_full && (
-                            <CardActions sx={{ justifyContent: 'center', p: 2, mt: 'auto' }}>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={handleConfirmSeat}
-                                    disabled={confirmSeatLoading}
-                                >
-                                    {confirmSeatLoading ? <CircularProgress size={20} color="inherit" /> : "Confirm Seat Here"}
-                                </Button>
-                            </CardActions>
-                        )}
-                        {viewingTableDetails && viewingTableDetails.is_full && viewingTableDetails.table_id !== studentInfo.assigned_table_id && (
-                            <Typography variant="body2" color="error" align="center" sx={{ p: 2, mt: 'auto' }}>This table is full.</Typography>
-                        )}
-                        {viewingTableDetails && viewingTableDetails.table_id === studentInfo.assigned_table_id && (
-                            <Typography variant="body2" color="success.main" align="center" sx={{ p: 2, mt: 'auto' }}>This is your current table.</Typography>
-                        )}
-                    </Card>
-                </Grid>
-            </Grid>
-        </Container>
+        {/* Right Panel: Selected Table Overview */}
+        <Grid item
+          xs={12}    // Takes full width on extra-small screens
+          sm={3}
+          md={2.5}
+          lg={2}
+          sx={{
+            display: 'flex', // Always display as flex
+            flexDirection: 'column',
+            minHeight: { xs: 'auto', sm: 0 },
+            height: { xs: 'auto', sm: '100%'},
+            flexShrink: { xs: 1, sm: 0 },
+            flexBasis: { xs: '100%', sm: '220px', md: '260px', lg: '280px' },
+            maxWidth: { xs: '100%', sm: '300px', md: '350px', lg: '400px' },
+            order: { xs: 3, sm: 0 } // Optional: if center is order 2, this is 3
+          }}
+        >
+          <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', boxShadow: 2, borderRadius: "12px", overflow: 'hidden' }}>
+            <CardHeader
+              title="Table Overview"
+              titleTypographyProps={{ variant: 'h6', sx: { fontSize: '1rem', color: 'white', fontWeight: 'bold'} }}
+              sx={{ backgroundColor: 'secondary.main', py: 1, px: 2, flexShrink: 0 }}
+            />
+            <CardContent sx={{ flexGrow: 1, overflowY: 'auto', p: 1.5 }}>
+              {viewingTableLoading ? (
+                 <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80px'}}><CircularProgress size={28} /></Box>
+              ) : viewingTableError ? ( <Alert severity="error" sx={{mt:1}}>{viewingTableError}</Alert>
+              ) : viewingTableDetails ? (
+                  <>
+                    <Typography variant="h6" color="secondary.dark" sx={{ fontWeight: 'bold', mb:0.5, fontSize: '1.1rem' }}>
+                      Viewing Table {viewingTableDetails.table_number}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                      Capacity: {viewingTableDetails.current_occupancy ?? 0} / {viewingTableDetails.capacity ?? 0}
+                      {viewingTableDetails.is_full && " (Full)"}
+                    </Typography>
+                    <StudentList students={viewingTableDetails.students || []} title="Current Occupants:" />
+                    {confirmSeatError && <Alert severity="error" sx={{ mt: 2 }}>{confirmSeatError}</Alert>}
+                  </>
+                ) : (
+                  <Typography variant="body2" color="text.secondary" sx={{mt:1, fontStyle: 'italic'}}>Click an available table to see its details.</Typography>
+                )
+              }
+            </CardContent>
+            {viewingTableDetails && (
+              <CardActions sx={{ p: 1.5, borderTop: '1px solid', borderColor: 'divider', flexShrink: 0, backgroundColor: (theme) => theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[800] }}>
+                {viewingTableDetails.table_id === studentInfo.assigned_table_id ? (
+                   <Typography variant="subtitle1" color="success.dark" align="center" sx={{ fontWeight: 'medium', width:'100%' }}>This is your current table.</Typography>
+                ) : viewingTableDetails.is_full ? (
+                   <Typography variant="subtitle1" color="error.dark" align="center" sx={{ fontWeight: 'medium', width:'100%' }}>This table is full.</Typography>
+                ) : (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    onClick={handleConfirmSeat}
+                    disabled={confirmSeatLoading}
+                    sx={{py: 0.75, fontWeight: 'bold'}}
+                  >
+                    {confirmSeatLoading ? <CircularProgress size={24} color="inherit"/> : "Confirm Seat Here"}
+                  </Button>
+                )}
+              </CardActions>
+            )}
+          </Card>
+        </Grid>
+      </Grid>
+    </Container>
 
-        <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={4000}
-            onClose={handleSnackbarClose}
-            message={snackbarMessage}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        />
-    </Box>
+    <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={4000}
+      onClose={handleSnackbarClose}
+      message={snackbarMessage}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+    />
+  </Box>
 );
 }
 
